@@ -31,4 +31,4 @@ def main(model_path, max_fps=10):
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    main(model_path='models/yolo11n_ncnn_model')
+    main(model_path='models/yolo11n_ncnn_model_240')
