@@ -19,7 +19,7 @@ def main(model_path, max_fps=10):
             print("Erreur : Impossible de lire l'image.")
             break
         #frame = cv2.resize(frame, (426, 240))
-        results = model.predict(frame, imgsz=320)
+        results = model.predict(frame, imgsz=240)
         #annotated_frame = results.render()[0]
         result_frame = results[0].plot()
         cv2.imshow("YOLO Detection", result_frame)
