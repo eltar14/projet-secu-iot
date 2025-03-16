@@ -6,7 +6,7 @@ import json
 import os
 from db_utils import insert_detection
 
-SAVE_DIR = "SAVE_DIR"
+SAVE_DIR = "/home/user/projet-secu-iot/SAVE_DIR"
 
 
 def main(model_path, max_fps=4):
