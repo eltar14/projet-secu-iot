@@ -27,7 +27,7 @@ def main(model_path, max_fps=4):
         cv2.imshow("YOLO Detection", result_frame)
 
         elapsed_time = time.time() - start_time
-        sleep_time = max(0, int(frame_delay - elapsed_time))
+        sleep_time = max(0, frame_delay - elapsed_time)
         time.sleep(sleep_time)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
