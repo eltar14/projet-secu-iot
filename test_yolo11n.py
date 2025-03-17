@@ -7,6 +7,7 @@ import os
 from db_utils import insert_detection
 
 SAVE_DIR = "/home/user/projet-secu-iot/SAVE_DIR"
+#SAVE_DIR = "C:\\Users\\lebou\\OneDrive - yncréa\\000_UQAC\\Cours Hiver\\sécu IoT\\projet\\projet-secu-iot\\SAVE_DIR"
 
 
 def main(model_path, max_fps=4):
@@ -29,11 +30,14 @@ def main(model_path, max_fps=4):
             print("Erreur : Impossible de lire l'image.")
             break
         #frame = cv2.resize(frame, (426, 240))
-        results = model.predict(frame, imgsz=96, classes=[0,], verbose=False)
+        results = model.predict(frame, imgsz=192, classes=[0,], verbose=False)
         #annotated_frame = results.render()[0]
         detection_dict = make_detection_dict(results[0].boxes, results[0].names)
 
-        current_ids = set([tuple(sorted(detection_dict.items()))])
+        current_ids = set(detection_dict.keys())
+
+        if current_ids : # debug
+            print(f"current IDs --- detecte IDs : {current_ids if current_ids else 'XXX'} --- {detected_ids if detected_ids else 'XXX'}")
 
         if current_ids and not current_ids.issubset(detected_ids):
             detected_ids.update(current_ids)
@@ -52,6 +56,9 @@ def main(model_path, max_fps=4):
 
             print(f"{datetime.now().strftime('%m/%d/%Y, %H:%M:%S')} --- {detection_dict}")
 
+        if not current_ids:
+            detected_ids.clear()
+
         result_frame = results[0].plot()
         cv2.imshow("YOLO Detection", result_frame)
 
@@ -67,6 +74,12 @@ def main(model_path, max_fps=4):
 
 
 def make_detection_dict(boxes, names):
+    """
+    returns a dictionnary as detected_object : how many of it detected
+    :param boxes: object from results from model.predict
+    :param names: object from results from model.predict
+    :return:
+    """
     occurence_list = [[x, boxes.cls.tolist().count(x)] for x in set(boxes.cls.tolist())]
     mon_dict = {}
     for elt in occurence_list:
@@ -77,4 +90,4 @@ def dict_to_json(detection_dict):
     return json.dumps(detection_dict)
 
 if __name__ == "__main__":
-    main(model_path='models/yolo11n_ncnn_model_96')
+    main(model_path='models/yolo11n_ncnn_model_192')
