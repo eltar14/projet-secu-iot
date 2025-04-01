@@ -4,7 +4,7 @@ from flask import (
 
 from dashboard.db import get_db
 
-bp = Blueprint('dashboard', __name__, url_prefix='/video')
+bp = Blueprint('video', __name__, url_prefix='/video')
 
 @bp.route('/add', methods=('POST', ))
 def add_video():
