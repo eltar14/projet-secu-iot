@@ -8,7 +8,7 @@ document
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
         const confirm_password =
-            document.getElementById("confirm_password").value;
+            document.getElementById("confirm-password").value;
 
         await register(email, password, confirm_password);
     });
