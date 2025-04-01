@@ -2,3 +2,4 @@ opencv-python
 ultralytics
 ncnn
 psycopg2
+python-dotenv

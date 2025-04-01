@@ -5,10 +5,14 @@ from datetime import datetime
 import json
 import os
 from db_utils import insert_detection
+from discord_utils import send_discord_embed_with_image
+from dotenv import load_dotenv
+load_dotenv()
 
-SAVE_DIR = "/home/user/projet-secu-iot/SAVE_DIR"
-#SAVE_DIR = "C:\\Users\\lebou\\OneDrive - yncréa\\000_UQAC\\Cours Hiver\\sécu IoT\\projet\\projet-secu-iot\\SAVE_DIR"
+#SAVE_DIR = "/home/user/projet-secu-iot/SAVE_DIR"
 
+SAVE_DIR = os.environ.get('SAVE_DIR')
+DISCORD_WEBHOOK = os.environ.get('DISCORD_WEBHOOK_URL')
 
 def main(model_path, max_fps=4):
     model = YOLO(model_path)
@@ -48,13 +52,20 @@ def main(model_path, max_fps=4):
 
             cv2.imwrite(image_path, frame)
 
+            # === ajout de l'intrusion dans la BDD
             insert_detection(
                 os.path.abspath(image_path),
                 timestamp,
                 json.dumps(detection_dict)
             )
 
+            # debug
             print(f"{datetime.now().strftime('%m/%d/%Y, %H:%M:%S')} --- {detection_dict}")
+
+            # === envoi d'une alerte sur discord ===
+            send_discord_embed_with_image(DISCORD_WEBHOOK, "ALERT",
+                                          f"Une intrusion a été détectée à {timestamp} : {json.dumps(detection_dict)}",
+                                          os.path.abspath(image_path))
 
         if not current_ids:
             detected_ids.clear()
