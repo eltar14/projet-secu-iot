@@ -69,7 +69,8 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
                 send_detection_to_api(
                     os.path.abspath(video_path),
                     ts,
-                    detection_dict
+                    detection_dict,
+                    API_URL
                 )
 
                 send_discord_embed_with_image(

@@ -1,13 +1,8 @@
 import requests
 import os
 import json
-from dotenv import load_dotenv
-load_dotenv()
 
-API_URL = os.environ.get("API_URL")
-
-
-def send_detection_to_api(video_path, timestamp, detection_dict):
+def send_detection_to_api(video_path, timestamp, detection_dict, API_URL):
     try:
         data = {
             'video_path': video_path,
