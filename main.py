@@ -55,7 +55,8 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
             # Si ce sont de nouvelles détections
             if not alert_active:
                 alert_active = True
-                timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+                ts = datetime.now()
+                timestamp = ts.strftime('%Y-%m-%d_%H-%M-%S')
                 video_filename = f"detection_{timestamp}.mp4"
                 video_path = os.path.join(SAVE_DIR, video_filename)
                 video_writer = cv2.VideoWriter(video_path, fourcc, max_fps, (frame.shape[1], frame.shape[0]))
@@ -67,7 +68,7 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
 
                 send_detection_to_api(
                     os.path.abspath(video_path),
-                    timestamp,
+                    ts,
                     detection_dict
                 )
 
