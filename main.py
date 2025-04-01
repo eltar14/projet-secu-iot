@@ -4,15 +4,16 @@ import time
 from datetime import datetime
 import json
 import os
-from db_utils import insert_detection
+from db_utils import send_detection_to_api
 from discord_utils import send_discord_embed_with_image
 from dotenv import load_dotenv
 load_dotenv()
 
 SAVE_DIR = os.environ.get('SAVE_DIR')
 DISCORD_WEBHOOK = os.environ.get('DISCORD_WEBHOOK_URL')
+API_URL = os.environ.get("API_URL")
 
-def main(model_path, max_fps=4, no_detection_timeout=5):
+def main(model_path, max_fps=4, no_detection_timeout=2):
     model = YOLO(model_path)
     cap = cv2.VideoCapture(0)
 
@@ -64,10 +65,10 @@ def main(model_path, max_fps=4, no_detection_timeout=5):
                 image_path = os.path.join(SAVE_DIR, image_name)
                 cv2.imwrite(image_path, frame)
 
-                insert_detection(
+                send_detection_to_api(
                     os.path.abspath(video_path),
                     timestamp,
-                    json.dumps(detection_dict)
+                    detection_dict
                 )
 
                 send_discord_embed_with_image(
@@ -118,6 +119,8 @@ def make_detection_dict(boxes, names):
     """
     occurence_list = [[x, boxes.cls.tolist().count(x)] for x in set(boxes.cls.tolist())]
     return {names[elt[0]]: elt[1] for elt in occurence_list}
+
+
 
 if __name__ == "__main__":
     main(model_path='models/yolo11n_ncnn_model_192')

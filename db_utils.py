@@ -1,16 +1,18 @@
-import psycopg2
-from db import DB_CONFIG
+import requests
+import os
+import json
 
-def insert_detection(image_path, timestamp, detection_json, id_detecteur=1):
+API_URL = os.environ.get("API_URL")
+def send_detection_to_api(video_path, timestamp, detection_dict):
     try:
-        conn = psycopg2.connect(**DB_CONFIG)
-        cur = conn.cursor()
-        cur.execute("""
-            INSERT INTO detection (timestamp_detection, info_detection, path_image_detection, real_detection, seen, id_detecteur)
-            VALUES (%s, %s, %s, %s, %s, %s);
-        """, (timestamp, detection_json, image_path, True, False, id_detecteur))
-        conn.commit()
-        cur.close()
-        conn.close()
+        with open(video_path, 'rb') as f:
+            files = {'video': f}
+            data = {
+                'timestamp': timestamp,
+                'detection': json.dumps(detection_dict)
+            }
+            response = requests.post(API_URL, data=data, files=files, timeout=10)
+            response.raise_for_status()
+            print("Detection envoyee au serveur.")
     except Exception as e:
-        print(f"Erreur lors de l'insertion en base : {e}")
+        print(f"Erreur lors de l'envoi de la detection : {e}")
