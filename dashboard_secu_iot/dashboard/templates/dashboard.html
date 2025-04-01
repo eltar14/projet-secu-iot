@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html class="h-full bg-gray-100">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Dashboard</title>
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    </head>
+    <body class="h-full">
+        <!--[if lt IE 7]>
+            <p class="browsehappy">
+                You are using an <strong>outdated</strong> browser. Please
+                <a href="#">upgrade your browser</a> to improve your experience.
+            </p>
+        <![endif]-->
+
+        <nav class="border-b-1 border-gray-200 bg-white">
+            <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+                <div class="relative flex h-16 items-center justify-between">
+                    <div
+                        class="absolute inset-y-0 left-0 flex items-center sm:hidden"
+                    >
+                        <!-- Mobile menu button-->
+                        <button
+                            type="button"
+                            id="btn-mobile-menu"
+                            class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset"
+                            aria-controls="mobile-menu"
+                            aria-expanded="false"
+                        >
+                            <span class="absolute -inset-0.5"></span>
+                            <span class="sr-only">Open main menu</span>
+                            <!--
+                      Icon when menu is closed.
+          
+                      Menu open: "hidden", Menu closed: "block"
+                    -->
+                            <svg
+                                id="icon-menu"
+                                class="block size-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                aria-hidden="true"
+                                data-slot="icon"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                                />
+                            </svg>
+                            <!--
+                      Icon when menu is open.
+          
+                      Menu open: "block", Menu closed: "hidden"
+                    -->
+                            <svg
+                                id="icon-close"
+                                class="hidden size-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                aria-hidden="true"
+                                data-slot="icon"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M6 18 18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                    <div
+                        class="flex flex-1 h-full items-center justify-center sm:items-stretch sm:justify-start"
+                    >
+                        <div class="flex shrink-0 items-center">
+                            <img
+                                class="h-8 w-auto"
+                                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
+                                alt="Your Company"
+                            />
+                        </div>
+                        <div class="hidden sm:ml-6 sm:block">
+                            <div
+                                class="flex h-full item-center justify-between space-x-4 ml-4"
+                            >
+                                <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                                <a
+                                    href="#"
+                                    class="px-1 flex items-center text-sm font-medium text-gray-900 border-b-2 border-indigo-500 mr-8"
+                                    aria-current="page"
+                                    >Dashboard</a
+                                >
+                                <a
+                                    href="#"
+                                    class="px-1 flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300"
+                                    >Intrusion</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
+                    >
+                        <div id="btn-logout" class="flex space-x-4">
+                            <a
+                                href="#"
+                                class="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
+                                aria-current="page"
+                                >Logout</a
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile menu, show/hide based on menu state. -->
+            <div
+                id="mobile-menu"
+                class="sm:hidden hidden"
+                id="mobile-menu"
+                aria-hidden="true"
+            >
+                <div class="space-y-1 pt-2 pb-3">
+                    <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                    <a
+                        href="#"
+                        class="block px-3 py-2 text-base font-medium text-indigo-700 bg-indigo-100 border-l-4 border-indigo-500"
+                        aria-current="page"
+                        >Dashboard</a
+                    >
+                    <a
+                        href="#"
+                        class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-700 bg-white hover:bg-gray-50 border-l-4 border-transparent hover:border-gray-400"
+                        >Intrusion</a
+                    >
+                </div>
+            </div>
+        </nav>
+
+        <section class="flex flex-col items-center justify-center">
+            <div
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-5xl"
+            >
+                <div class="bg-white rounded-2xl shadow-lg p-4">
+                    <h3 class="text-lg font-semibold mb-2">26 Mars 2025</h3>
+                    <video class="w-full rounded-lg" controls>
+                        <source
+                            src="https://www.w3schools.com/html/mov_bbb.mp4"
+                            type="video/mp4"
+                        />
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="flex justify-between mt-4">
+                        <button
+                            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        >
+                            Intrusion
+                        </button>
+                        <button
+                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                        >
+                            Not Intrusion
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-lg p-4">
+                    <h3 class="text-lg font-semibold mb-2">26 Mars 2025</h3>
+                    <video class="w-full rounded-lg" controls>
+                        <source
+                            src="https://www.w3schools.com/html/mov_bbb.mp4"
+                            type="video/mp4"
+                        />
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="flex justify-between mt-4">
+                        <button
+                            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        >
+                            Intrusion
+                        </button>
+                        <button
+                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                        >
+                            Not Intrusion
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-lg p-4">
+                    <h3 class="text-lg font-semibold mb-2">26 Mars 2025</h3>
+                    <video class="w-full rounded-lg" controls>
+                        <source
+                            src="https://www.w3schools.com/html/mov_bbb.mp4"
+                            type="video/mp4"
+                        />
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="flex justify-between mt-4">
+                        <button
+                            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        >
+                            Intrusion
+                        </button>
+                        <button
+                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                        >
+                            Not Intrusion
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-lg p-4">
+                    <h3 class="text-lg font-semibold mb-2">26 Mars 2025</h3>
+                    <video class="w-full rounded-lg" controls>
+                        <source
+                            src="https://www.w3schools.com/html/mov_bbb.mp4"
+                            type="video/mp4"
+                        />
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="flex justify-between mt-4">
+                        <button
+                            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        >
+                            Intrusion
+                        </button>
+                        <button
+                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                        >
+                            Not Intrusion
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-lg p-4">
+                    <h3 class="text-lg font-semibold mb-2">26 Mars 2025</h3>
+                    <video class="w-full rounded-lg" controls>
+                        <source
+                            src="https://www.w3schools.com/html/mov_bbb.mp4"
+                            type="video/mp4"
+                        />
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="flex justify-between mt-4">
+                        <button
+                            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        >
+                            Intrusion
+                        </button>
+                        <button
+                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                        >
+                            Not Intrusion
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-lg p-4">
+                    <h3 class="text-lg font-semibold mb-2">26 Mars 2025</h3>
+                    <video class="w-full rounded-lg" controls>
+                        <source
+                            src="https://www.w3schools.com/html/mov_bbb.mp4"
+                            type="video/mp4"
+                        />
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="flex justify-between mt-4">
+                        <button
+                            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        >
+                            Intrusion
+                        </button>
+                        <button
+                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                        >
+                            Not Intrusion
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-lg p-4">
+                    <h3 class="text-lg font-semibold mb-2">26 Mars 2025</h3>
+                    <video class="w-full rounded-lg" controls>
+                        <source
+                            src="https://www.w3schools.com/html/mov_bbb.mp4"
+                            type="video/mp4"
+                        />
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="flex justify-between mt-4">
+                        <button
+                            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        >
+                            Intrusion
+                        </button>
+                        <button
+                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                        >
+                            Not Intrusion
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-lg p-4">
+                    <h3 class="text-lg font-semibold mb-2">26 Mars 2025</h3>
+                    <video class="w-full rounded-lg" controls>
+                        <source
+                            src="https://www.w3schools.com/html/mov_bbb.mp4"
+                            type="video/mp4"
+                        />
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="flex justify-between mt-4">
+                        <button
+                            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        >
+                            Intrusion
+                        </button>
+                        <button
+                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                        >
+                            Not Intrusion
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer></footer>
+
+        <script
+            type="module"
+            src="{{ url_for('static', filename='scripts/auth.js') }}"
+        ></script>
+        <script
+            type="module"
+            src="{{ url_for('static', filename='scripts/dashboard.js') }}"
+        ></script>
+    </body>
+</html>
