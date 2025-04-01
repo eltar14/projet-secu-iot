@@ -14,11 +14,11 @@ def add_video():
     video_path = request.form['video_path']
     timestamp = request.form['timestamp']
     duration = request.form['duration']
-    video_description = request.form['video_description']
+    detection = request.form['detection']
 
     db = get_db()
     cur = db.cursor()
     cur.execute(
-        'INSERT INTO video (video_path, timestamp, duration, video_description) VALUES (%s, %s, %s, %s)',
-        (video_path, timestamp, duration, video_description)
+        'INSERT INTO video (file_path, timestamp, duration, description) VALUES (%s, %s, %s, %s)',
+        (video_path, timestamp, duration, detection)
     )
