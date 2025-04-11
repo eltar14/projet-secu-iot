@@ -1,6 +1,4 @@
-document.getElementById("btn-logout").addEventListener("click", async () => {
-    await logout();
-});
+import { logout } from "./auth.js";
 
 document.getElementById("btn-logout").addEventListener("click", async () => {
     await logout();

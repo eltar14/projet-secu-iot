@@ -30,7 +30,7 @@ def login():
 
         session["jwt_token"] = jwt.encode({"email": user[0]}, os.getenv("SECRET_KEY"), algorithm="HS256")
 
-        return redirect(url_for('dashboard.dashboard')), 200
+        return jsonify({"redirect": url_for('dashboard.dashboard')}), 200
     
     return jsonify({"error": "Invalid email or password"}), 401
 
@@ -68,7 +68,7 @@ def register():
     user = cur.fetchone()
 
     if user:
-        return redirect(url_for('auth.login')), 200
+        return jsonify({"redirect": url_for('auth.login')}), 200
 
     if password != confirm_password:
         return jsonify({"error": "Passwords do not match"}), 400
@@ -85,14 +85,13 @@ def register():
 
     session.clear()
     session["jwt_token"] = jwt.encode({"email": email}, os.getenv("SECRET_KEY"), algorithm="HS256")
-    return redirect(url_for('dashboard.dashboard'))
+    return jsonify({"redirect": url_for('dashboard.dashboard')})
 
 
 @bp.route('/logout', methods=('POST', ))
 def logout():
-    print("logout")
     session.clear()
-    return redirect(url_for('index')), 200
+    return jsonify({"redirect": url_for("index")}), 200
 
 
 @bp.before_app_request

@@ -26,4 +26,4 @@ def dashboard():
 @bp.route('/static/images/<path:filename>', methods=('GET', ))
 @login_required
 def serve_static(filename):
-    return send_from_directory('static/images', filename)
+    return send_from_directory('static/images', filename), 200

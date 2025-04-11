@@ -35,7 +35,7 @@ def create_app(test_config=None):
     app.register_blueprint(dashboard.bp)
     app.add_url_rule('/', endpoint='index')
 
-    with app.app_context():
-        print(app.url_map)
+    # with app.app_context():
+    #     print(app.url_map)
 
     return app

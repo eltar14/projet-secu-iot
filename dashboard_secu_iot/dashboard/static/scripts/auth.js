@@ -5,10 +5,10 @@ export async function register(email, password, confirm_password) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password, confirm_password }),
-        redirect: "follow",
-    }).then((res) => {
+    }).then(async (res) => {
         if (res.status === 200) {
-            window.location.href = res.url;
+            const data = await res.json();
+            window.location.href = data.redirect;
         } else {
             document.getElementById("email").value = "";
             document.getElementById("password").value = "";
@@ -24,9 +24,10 @@ export async function login(email, password) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
-    }).then((res) => {
+    }).then(async (res) => {
         if (res.status === 200) {
-            window.location.href = res.url;
+            const data = await res.json();
+            window.location.href = data.redirect;
         } else {
             document.getElementById("email").value = "";
             document.getElementById("password").value = "";
@@ -37,7 +38,9 @@ export async function login(email, password) {
 export async function logout() {
     return await fetch("/auth/logout", {
         method: "POST",
-    }).then((res) => (window.location.href = res.url));
+    })
+        .then((res) => res.json())
+        .then((res) => (window.location.href = res.redirect));
 }
 
 export async function validate_password() {
