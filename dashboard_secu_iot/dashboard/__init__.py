@@ -9,8 +9,8 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
     app.config.from_mapping(
-        SECRET_KEY = os.getenv("SECRET_KEY"),
-        DATABASE = {
+        SECRET_KEY=os.getenv("SECRET_KEY"),
+        DATABASE={
             'host': os.getenv("DB_HOST"),
             'user': os.getenv("DB_USER"),
             'password': os.getenv("DB_PASSWORD"),
@@ -28,8 +28,14 @@ def create_app(test_config=None):
     from . import video
     app.register_blueprint(video.bp)
 
+    from . import intrusion
+    app.register_blueprint(intrusion.bp)
+
     from . import dashboard
     app.register_blueprint(dashboard.bp)
     app.add_url_rule('/', endpoint='index')
+
+    with app.app_context():
+        print(app.url_map)
 
     return app

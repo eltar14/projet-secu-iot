@@ -2,7 +2,12 @@ from flask import (
     Blueprint, g, redirect, render_template, request, url_for
 )
 
+import psycopg2.extras
+
+from dashboard.auth import login_required
+
 from dashboard.db import get_db
+import json
 
 bp = Blueprint('video', __name__, url_prefix='/video')
 
@@ -20,5 +25,37 @@ def add_video():
     cur = db.cursor()
     cur.execute(
         'INSERT INTO video (file_path, timestamp, duration, description) VALUES (%s, %s, %s, %s)',
-        (video_path, timestamp, duration, detection)
+        ('/static/images' + video_path, 'CURRENT_TIMESTAMP', duration, detection)
     )
+
+    return "Video added successfully", 200
+
+
+@bp.route('/get' , methods=('GET', ))
+@login_required
+def get_video():
+    db = get_db()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+    cur.execute('SELECT * FROM video WHERE intrusion IS NULL ORDER BY timestamp DESC')
+    videos = cur.fetchall()
+    cur.close()
+
+    print(url_for('static', filename='video/aaa.mp4'))
+
+    return [{k:v for k, v in record.items()} for record in videos], 200
+
+
+@bp.route('/get_intrusion' , methods=('GET', ))
+@login_required
+def get_intrusion_video():
+    db = get_db()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+    cur.execute('SELECT * FROM video WHERE intrusion IS True ORDER BY timestamp DESC')
+    videos = cur.fetchall()
+    cur.close()
+
+    print(url_for('static', filename='video/aaa.mp4'))
+
+    return [{k:v for k, v in record.items()} for record in videos], 200

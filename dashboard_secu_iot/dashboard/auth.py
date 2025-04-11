@@ -30,7 +30,7 @@ def login():
 
         session["jwt_token"] = jwt.encode({"email": user[0]}, os.getenv("SECRET_KEY"), algorithm="HS256")
 
-        return redirect(url_for('dashboard.dashboard'))
+        return redirect(url_for('dashboard.dashboard')), 200
     
     return jsonify({"error": "Invalid email or password"}), 401
 
@@ -44,11 +44,31 @@ def register():
     db = get_db()
     cur = db.cursor()
 
+    issues = []
+
+    if len(password) < 8:
+        issues.append("Must be at least 8 characters long.")
+    if len(password) > 64:
+        issues.append("Must be at most 64 characters long.")
+    if not any(char.isupper() for char in password):
+        issues.append("Must contain at least one uppercase letter.")
+    if not any(char.islower() for char in password):
+        issues.append("Must contain at least one lowercase letter.")
+    if not any(char.isdigit() for char in password):
+        issues.append("Must contain at least one number.")
+    if not any(char in "!@#$%^&*()-_=+[]{}|;:'\",.<>?/`~" for char in password):
+        issues.append("Must contain at least one special character.")
+    if any(common in password.lower() for common in ["password", "123456", "qwerty"]):
+        issues.append("Cannot contain common passwords.")
+
+    if issues:
+        return jsonify({"error": issues}), 400
+
     cur.execute('SELECT * FROM credentials WHERE email = %s', (email,))
     user = cur.fetchone()
 
     if user:
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('auth.login')), 200
 
     if password != confirm_password:
         return jsonify({"error": "Passwords do not match"}), 400
@@ -72,7 +92,7 @@ def register():
 def logout():
     print("logout")
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('index')), 200
 
 
 @bp.before_app_request

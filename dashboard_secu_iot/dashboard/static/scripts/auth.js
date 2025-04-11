@@ -6,7 +6,15 @@ export async function register(email, password, confirm_password) {
         },
         body: JSON.stringify({ email, password, confirm_password }),
         redirect: "follow",
-    }).then((res) => (window.location.href = res.url));
+    }).then((res) => {
+        if (res.status === 200) {
+            window.location.href = res.url;
+        } else {
+            document.getElementById("email").value = "";
+            document.getElementById("password").value = "";
+            document.getElementById("confirm-password").value = "";
+        }
+    });
 }
 
 export async function login(email, password) {
@@ -16,7 +24,14 @@ export async function login(email, password) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
-    }).then((res) => (window.location.href = res.url));
+    }).then((res) => {
+        if (res.status === 200) {
+            window.location.href = res.url;
+        } else {
+            document.getElementById("email").value = "";
+            document.getElementById("password").value = "";
+        }
+    });
 }
 
 export async function logout() {
@@ -27,7 +42,6 @@ export async function logout() {
 
 export async function validate_password() {
     const pwd = document.getElementById("password").value;
-    const errorsList = document.getElementById("errors");
     let issues = [];
 
     if (pwd.length < 8) {
@@ -52,6 +66,14 @@ export async function validate_password() {
         issues.push("Cannot contain common passwords.");
     }
 
+    pushError(issues);
+
+    return issues.length === 0;
+}
+
+function pushError(issues) {
+    const errorsList = document.getElementById("errors");
+
     errorsList.innerHTML = "";
     if (issues.length === 0 && pwd) {
         errorsList.innerHTML = `<li class='text-green-600 flex items-center gap-2'>✅ Strong password!</li>`;
@@ -60,8 +82,6 @@ export async function validate_password() {
             errorsList.innerHTML += `<li class='text-red-600 flex items-center gap-2'>❌ ${issue}</li>`;
         });
     }
-
-    return issues.length === 0;
 }
 
 export async function check_password() {

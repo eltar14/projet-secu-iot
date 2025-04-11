@@ -225,3 +225,9 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+dashboard_secu_iot/dashboard/static/images/aaaa.mp4
+dashboard_secu_iot/dashboard/static/images/mov_bbb_1.mp4
+dashboard_secu_iot/dashboard/static/images/mov_bbb_2.mp4
+dashboard_secu_iot/dashboard/static/images/mov_bbb_3.mp4
+dashboard_secu_iot/dashboard/static/images/mov_bbb_4.mp4
+dashboard_secu_iot/dashboard/static/images/mov_bbb.mp4
