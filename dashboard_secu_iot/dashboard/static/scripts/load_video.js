@@ -1,6 +1,6 @@
 function createVideoCard(video, intrusion = false) {
     const card = document.createElement("div");
-    card.className = "bg-white rounded-2xl shadow-lg p-4";
+    card.className = "video-card bg-white rounded-2xl shadow-lg p-4";
 
     const date = new Date(video.timestamp);
     const formattedDate = date.toLocaleString("fr-FR", {
@@ -32,12 +32,12 @@ function createVideoCard(video, intrusion = false) {
 
 export async function loadVideo(intrusion = false) {
     try {
-        const response = intrusion
-            ? await fetch("/video/get_intrusion")
-            : await fetch("/video/get");
-        const videos = await response.json();
-
         const container = document.getElementById("video-container");
+
+        const videos = intrusion
+            ? await fetch("/video/get_intrusion").then((res) => res.json())
+            : await fetch("/video/get").then((res) => res.json());
+
         container.innerHTML = "";
 
         videos.forEach((video) => {

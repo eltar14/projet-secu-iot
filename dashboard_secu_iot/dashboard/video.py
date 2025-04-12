@@ -7,7 +7,6 @@ import psycopg2.extras
 from dashboard.auth import login_required
 
 from dashboard.db import get_db
-import json
 
 bp = Blueprint('video', __name__, url_prefix='/video')
 
@@ -59,3 +58,30 @@ def get_intrusion_video():
     print(url_for('static', filename='video/aaa.mp4'))
 
     return [{k:v for k, v in record.items()} for record in videos], 200
+
+
+@bp.route('/set_intrusion' , methods=('POST', ))
+@login_required
+def set_intrusion_video():
+    db = get_db()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    intrusion = request.get_json()['intrusion']
+    video_id = request.get_json()['video_id']
+
+    cur.execute('SELECT * FROM video WHERE id = %s', (video_id, ))
+    video = cur.fetchone()
+
+    print(video['intrusion'])
+
+    if video is None:
+        return "Video not found", 404
+    if video['intrusion'] is not None:
+        return "Video already set", 400
+
+
+    cur.execute('UPDATE video SET intrusion = %s WHERE id = %s', (intrusion, video_id, ))
+    db.commit()
+    cur.close()
+
+    return "Intrusion video updated successfully", 200
