@@ -97,13 +97,6 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
                 image_path = os.path.join(SAVE_DIR, image_name)
                 cv2.imwrite(image_path, frame)
 
-                send_detection_to_api(
-                    video_filename,
-                    ts.strftime('%Y-%m-%d %H:%M:%S'),
-                    detection_dict,
-                    API_URL
-                )
-
                 send_discord_embed_with_image(
                     DISCORD_WEBHOOK,
                     "ALERT",
