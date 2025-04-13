@@ -6,12 +6,34 @@ import json
 import os
 from db_utils import send_detection_to_api
 from discord_utils import send_discord_embed_with_image
+from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 load_dotenv()
 
 SAVE_DIR = os.environ.get('SAVE_DIR')
 DISCORD_WEBHOOK = os.environ.get('DISCORD_WEBHOOK_URL')
 API_URL = os.environ.get("API_URL")
+ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY')
+VIDEO_CODEC = os.environ.get("VIDEO_CODEC", "avc1")
+
+
+def encrypt_file(input_path, output_path, key):
+    """
+    Lit le contenu du fichier input_path, le chiffre et l'enregistre dans output_path.
+    """
+    try:
+        with open(input_path, 'rb') as file_in:
+            data = file_in.read()
+        fernet = Fernet(key)
+        encrypted_data = fernet.encrypt(data)
+        with open(output_path, 'wb') as file_out:
+            file_out.write(encrypted_data)
+        return True
+    except Exception as e:
+        print(f"Erreur lors du chiffrement : {e}")
+        return False
+
+
 
 def main(model_path, max_fps=4, no_detection_timeout=2):
     model = YOLO(model_path)
@@ -28,8 +50,9 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
     last_detection_time = None
     video_filename = None
     video_path = None
+    detection_frame_count = 0
 
-    fourcc = cv2.VideoWriter_fourcc(*'avc1')
+    fourcc = cv2.VideoWriter_fourcc(*VIDEO_CODEC)
 
     while True:
         start_time = time.time()
@@ -43,28 +66,26 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
         detection_dict = make_detection_dict(results[0].boxes, results[0].names)
         current_ids = set(detection_dict.keys())
 
-        # DEBUG
-        if current_ids:
-            print(f"current IDs --- detecte IDs : {current_ids} --- {detected_ids}")
-
         now = time.time()
 
         if current_ids:
+            print(f"current IDs --- detecte IDs : {current_ids} --- {detected_ids}")
             last_detection_time = now
 
             # Si ce sont de nouvelles détections
             if not alert_active:
                 alert_active = True
+                detection_frame_count = 1
                 ts = datetime.now()
                 timestamp = ts.strftime('%Y-%m-%d_%H-%M-%S')
                 video_filename = f"detection_{timestamp}.mp4"
                 video_path = os.path.join(SAVE_DIR, video_filename)
                 video_writer = cv2.VideoWriter(video_path, fourcc, max_fps, (frame.shape[1], frame.shape[0]))
 
-                # capture une image fixe pour l alerte + BDD
+                """# capture une image fixe pour l alerte + BDD
                 image_name = f"detection_{timestamp}.jpg"
                 image_path = os.path.join(SAVE_DIR, image_name)
-                cv2.imwrite(image_path, frame)
+                cv2.imwrite(image_path, frame)"""
 
                 send_detection_to_api(
                     video_filename,
@@ -73,12 +94,35 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
                     API_URL
                 )
 
-                send_discord_embed_with_image(
+                """send_discord_embed_with_image(
                     DISCORD_WEBHOOK,
                     "ALERT",
                     f"Une intrusion a été détectée à {timestamp} : {json.dumps(detection_dict)}",
                     os.path.abspath(image_path)
-                )
+                )"""
+            else:
+                detection_frame_count += 1
+
+        if detection_frame_count == 3:
+            # capture image + envoi API + Discord
+            image_name = f"detection_{timestamp}.jpg"
+            image_path = os.path.join(SAVE_DIR, image_name)
+            cv2.imwrite(image_path, frame)
+
+            send_detection_to_api(
+                video_filename,
+                ts.strftime('%Y-%m-%d %H:%M:%S'),
+                detection_dict,
+                API_URL
+            )
+
+            send_discord_embed_with_image(
+                DISCORD_WEBHOOK,
+                "ALERT",
+                f"Une intrusion a été détectée à {timestamp} : {json.dumps(detection_dict)}",
+                os.path.abspath(image_path)
+            )
+
 
         if alert_active:
             video_writer.write(frame)
@@ -91,6 +135,19 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
                 video_writer.release()
                 video_writer = None
                 last_detection_time = None
+
+                if ENCRYPTION_KEY is None:
+                    print("Cle de chiffrement non trouvée dans le fichier .env.")
+                else:
+                    encrypted_video_path = video_path + ".enc"
+                    if encrypt_file(video_path, encrypted_video_path, ENCRYPTION_KEY):
+                        # supprimer le fichier en clair si le chiffrement est reussi
+                        os.remove(video_path)
+                        print(f"Vidéo chiffrée et sauvegardée : {encrypted_video_path}")
+                    else:
+                        print("Echec du chiffrement de la vidéo.")
+
+
                 video_filename = None
                 video_path = None
 
