@@ -58,7 +58,7 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
                 ts = datetime.now()
                 timestamp = ts.strftime('%Y-%m-%d_%H-%M-%S')
                 video_filename = f"detection_{timestamp}.mp4"
-                video_path = os.path.join(SAVE_DIR, video_filename)
+                video_path = video_filename
                 video_writer = cv2.VideoWriter(video_path, fourcc, max_fps, (frame.shape[1], frame.shape[0]))
 
                 # capture une image fixe pour l alerte + BDD
