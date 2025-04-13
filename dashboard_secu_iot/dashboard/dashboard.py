@@ -36,7 +36,7 @@ def decrypt_stream(path):
                 decrypted_data = fernet.decrypt(encrypted_data)
             except Exception:
                 abort(500, description="Decryption failed.")
-            
+            print("AAAAAAAAAAAA", len(decrypted_data))
             chunk_size = 1024 * 1024
             for i in range(0, len(decrypted_data), chunk_size):
                 yield decrypted_data[i:i + chunk_size]
