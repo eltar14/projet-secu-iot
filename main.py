@@ -29,7 +29,7 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
     video_filename = None
     video_path = None
 
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # codec vidéo
+    fourcc = cv2.VideoWriter_fourcc(*'H264')  # codec vidéo
 
     while True:
         start_time = time.time()
