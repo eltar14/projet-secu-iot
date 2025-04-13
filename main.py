@@ -68,7 +68,7 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
 
                 send_detection_to_api(
                     os.path.abspath(video_path),
-                    ts,
+                    ts.strftime('%Y-%m-%d %H:%M:%S'),
                     detection_dict,
                     API_URL
                 )
