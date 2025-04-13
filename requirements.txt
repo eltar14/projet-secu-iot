@@ -3,3 +3,4 @@ ultralytics
 ncnn
 python-dotenv
 requests
+cryptography
