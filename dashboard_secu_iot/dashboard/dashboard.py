@@ -54,7 +54,7 @@ def serve_decrypted_video(filename):
         abort(404)
 
     return Response(
-        decrypt_stream(encrypted_path),
+        decrypt_stream(encrypted_path)(),
         mimetype='video/mp4',
         headers={
             "Content-Disposition": f"inline; filename={filename}",
