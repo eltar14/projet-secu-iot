@@ -31,6 +31,7 @@ def decrypt_stream(path):
     fernet = Fernet(current_app.config['FRENET_KEY'])
     def generate():
         with open(path, 'rb') as f:
+            print("AAAAAAAAAAAA")
             encrypted_data = f.read()
             try:
                 decrypted_data = fernet.decrypt(encrypted_data)
