@@ -6,6 +6,8 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "bcrypt>=4.3.0",
+    "cryptography>=44.0.2",
+    "cryptography-fernet>=0.1.0",
     "dotenv>=0.9.9",
     "flask>=3.1.0",
     "flask-sqlalchemy>=3.1.1",
