@@ -29,20 +29,19 @@ def dashboard():
 
 def decrypt_stream(path):
     fernet = Fernet(current_app.config['FRENET_KEY'])
-    def generate():
-        with open(path, 'rb') as f:
-            print("AAAAAAAAAAAA")
-            encrypted_data = f.read()
-            try:
-                decrypted_data = fernet.decrypt(encrypted_data)
-            except Exception:
-                abort(500, description="Decryption failed.")
-            print("AAAAAAAAAAAA", len(decrypted_data))
-            chunk_size = 1024 * 1024
+
+    with open(path, 'rb') as f:
+        encrypted_data = f.read()
+        try:
+            decrypted_data = fernet.decrypt(encrypted_data)
+        except Exception:
+            abort(500, description="Decryption failed.")
+
+        chunk_size = 1024 * 1024
+        def generator():
             for i in range(0, len(decrypted_data), chunk_size):
                 yield decrypted_data[i:i + chunk_size]
-
-    return generate
+        return generator()
 
 
 @bp.route('/static/images/<path:filename>')
@@ -54,7 +53,7 @@ def serve_decrypted_video(filename):
         abort(404)
 
     return Response(
-        decrypt_stream(encrypted_path)(),
+        decrypt_stream(encrypted_path),  # now this returns a generator
         mimetype='video/mp4',
         headers={
             "Content-Disposition": f"inline; filename={filename}",
