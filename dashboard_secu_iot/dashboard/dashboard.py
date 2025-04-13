@@ -37,6 +37,11 @@ def decrypt_stream(path):
         except Exception:
             abort(500, description="Decryption failed.")
 
+        decrypted_path = path.rsplit('.enc', 1)[0]
+        with open(decrypted_path, 'wb') as fo:
+            fo.write(decrypted_data)
+
+
         chunk_size = 1024 * 1024
         def generator():
             for i in range(0, len(decrypted_data), chunk_size):
