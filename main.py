@@ -67,7 +67,7 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
                 cv2.imwrite(image_path, frame)
 
                 send_detection_to_api(
-                    video_path,
+                    video_filename,
                     ts.strftime('%Y-%m-%d %H:%M:%S'),
                     detection_dict,
                     API_URL
