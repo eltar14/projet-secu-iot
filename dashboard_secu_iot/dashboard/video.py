@@ -20,11 +20,13 @@ def add_video():
     duration = request.form['duration']
     detection = request.form['detection']
 
+    print(timestamp)
+    
     db = get_db()
     cur = db.cursor()
     cur.execute(
         'INSERT INTO video (file_path, timestamp, duration, description) VALUES (%s, %s, %s, %s)',
-        ('/static/images' + video_path, 'CURRENT_TIMESTAMP', duration, detection)
+        ('/static/images' + video_path, timestamp, duration, detection) 
     )
 
     return "Video added successfully", 200
