@@ -8,6 +8,7 @@ from db_utils import send_detection_to_api
 from discord_utils import send_discord_embed_with_image
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
+
 load_dotenv()
 
 SAVE_DIR = os.environ.get('SAVE_DIR')
@@ -34,14 +35,13 @@ def encrypt_file(input_path, output_path, key):
         return False
 
 
-
 def main(model_path, max_fps=4, no_detection_timeout=2):
     model = YOLO(model_path)
     cap = cv2.VideoCapture(0)
 
     if not cap.isOpened():
         print("Erreur : Impossible d'ouvrir la webcam.")
-        return()
+        return ()
 
     frame_delay = 1.0 / max_fps
     detected_ids = set()
@@ -62,30 +62,40 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
             print("Erreur : Impossible de lire l'image.")
             break
 
-        results = model.predict(frame, imgsz=192, classes=[0,], verbose=False)
+        results = model.predict(frame, imgsz=192, classes=[0, ], verbose=False)
         detection_dict = make_detection_dict(results[0].boxes, results[0].names)
         current_ids = set(detection_dict.keys())
 
         now = time.time()
 
-        if current_ids:
+        if current_ids:  # si detection d'humain
             print(f"current IDs --- detecte IDs : {current_ids} --- {detected_ids}")
             last_detection_time = now
 
-            # Si ce sont de nouvelles détections
-            if not alert_active:
-                alert_active = True
-                detection_frame_count = 1
+            if not alert_active:  # si nouvelle détection
+                alert_active = True  # bool d'etat True
+                detection_frame_count = 0
                 ts = datetime.now()
                 timestamp = ts.strftime('%Y-%m-%d_%H-%M-%S')
+
+                # commencer l'enregistrement video
                 video_filename = f"detection_{timestamp}.mp4"
                 video_path = os.path.join(SAVE_DIR, video_filename)
                 video_writer = cv2.VideoWriter(video_path, fourcc, max_fps, (frame.shape[1], frame.shape[0]))
 
-                """# capture une image fixe pour l alerte + BDD
+                # envoyer le lien à l'api #TODO mettre après l'enregistrement complet
+                send_detection_to_api(
+                    video_filename,
+                    ts.strftime('%Y-%m-%d %H:%M:%S'),
+                    detection_dict,
+                    API_URL
+                )
+
+            if detection_frame_count == 2:  # si on arrive a la 3e frame de detection consecutive envoyer notif discord (pour avoir un screen correct et pas juste qqn sur le bord)
+                # capture image + envoi API + Discord
                 image_name = f"detection_{timestamp}.jpg"
                 image_path = os.path.join(SAVE_DIR, image_name)
-                cv2.imwrite(image_path, frame)"""
+                cv2.imwrite(image_path, frame)
 
                 send_detection_to_api(
                     video_filename,
@@ -94,35 +104,14 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
                     API_URL
                 )
 
-                """send_discord_embed_with_image(
+                send_discord_embed_with_image(
                     DISCORD_WEBHOOK,
                     "ALERT",
                     f"Une intrusion a été détectée à {timestamp} : {json.dumps(detection_dict)}",
                     os.path.abspath(image_path)
-                )"""
-            else:
-                detection_frame_count += 1
+                )
 
-        if detection_frame_count == 3:
-            # capture image + envoi API + Discord
-            image_name = f"detection_{timestamp}.jpg"
-            image_path = os.path.join(SAVE_DIR, image_name)
-            cv2.imwrite(image_path, frame)
-
-            send_detection_to_api(
-                video_filename,
-                ts.strftime('%Y-%m-%d %H:%M:%S'),
-                detection_dict,
-                API_URL
-            )
-
-            send_discord_embed_with_image(
-                DISCORD_WEBHOOK,
-                "ALERT",
-                f"Une intrusion a été détectée à {timestamp} : {json.dumps(detection_dict)}",
-                os.path.abspath(image_path)
-            )
-
+            detection_frame_count += 1 # tant qu'on detecte un humain --> +1
 
         if alert_active:
             video_writer.write(frame)
@@ -146,7 +135,6 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
                         print(f"Vidéo chiffrée et sauvegardée : {encrypted_video_path}")
                     else:
                         print("Echec du chiffrement de la vidéo.")
-
 
                 video_filename = None
                 video_path = None
@@ -178,7 +166,6 @@ def make_detection_dict(boxes, names):
     """
     occurence_list = [[x, boxes.cls.tolist().count(x)] for x in set(boxes.cls.tolist())]
     return {names[elt[0]]: elt[1] for elt in occurence_list}
-
 
 
 if __name__ == "__main__":
