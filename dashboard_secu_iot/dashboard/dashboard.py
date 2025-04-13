@@ -28,7 +28,7 @@ def dashboard():
 
 
 def decrypt_stream(path):
-    fernet = Fernet(current_app.config['ENCRYPTION_KEY'])
+    fernet = Fernet(current_app.config['FRENET_KEY'])
     def generate():
         with open(path, 'rb') as f:
             encrypted_data = f.read()
