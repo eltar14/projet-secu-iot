@@ -16,7 +16,8 @@ def create_app(test_config=None):
             'password': os.getenv("DB_PASSWORD"),
             'dbname': os.getenv("DB_NAME"),
             'port': os.getenv("DB_PORT")
-        }
+        },
+        FRENET_KEY=os.getenv("ENCRYPTION_KEY"),
     )
 
     from . import db
