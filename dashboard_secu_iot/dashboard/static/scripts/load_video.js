@@ -14,7 +14,7 @@ function createVideoCard(video, intrusion = false) {
     });
 
     card.innerHTML = `
-            <video class="rounded-t-lg w-full" controls>
+            <video class="rounded-t-lg w-full aspect-4/3" controls>
                 <source src="${video.file_path}" type="video/mp4" />
                 Your browser does not support the video tag.
             </video>
