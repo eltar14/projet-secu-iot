@@ -160,9 +160,39 @@
             </div>
         </nav>
 
+        <div class="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
+            <h1 class="text-2xl font-bold mb-4">System Logs</h1>
+            <div class="space-y-2 max-h-[600px] overflow-y-auto">
+                {% for log in logs %} {% if 'Video ID' in log %} {% set video_id
+                = log.split('Video ID ')[1].split(' ')[0] %}
+                <div
+                    class="flex justify-between items-center bg-gray-50 p-3 rounded-md border border-gray-200 text-sm font-mono text-gray-700"
+                >
+                    <span>{{ log.strip() }}</span>
+                    <button
+                        data-video-id="{{ video_id }}"
+                        class="cancel-video px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                    >
+                        Cancel {{ video_id }}
+                    </button>
+                </div>
+                {% else %}
+                <div
+                    class="bg-gray-50 p-3 rounded-md border border-gray-200 text-sm font-mono text-gray-700"
+                >
+                    {{ log.strip() }}
+                </div>
+                {% endif %} {% endfor %}
+            </div>
+        </div>
+
         <script
             type="module"
             src="{{ url_for('static', filename='scripts/nav.js') }}"
+        ></script>
+        <script
+            type="module"
+            src="{{ url_for('static', filename='scripts/log.js') }}"
         ></script>
     </body>
 </html>

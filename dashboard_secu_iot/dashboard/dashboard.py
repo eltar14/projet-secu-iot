@@ -27,7 +27,6 @@ def dashboard():
     return render_template('dashboard.html')
 
 
-
 @bp.route('/static/images/<path:filename>')
 @login_required
 def serve_decrypted_video(filename):
