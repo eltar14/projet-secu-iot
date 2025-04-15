@@ -20,8 +20,6 @@ def add_video():
     duration = request.form['duration']
     detection = request.form['detection']
 
-    print(timestamp)
-
     db = get_db()
     cur = db.cursor()
     cur.execute(
@@ -42,8 +40,6 @@ def get_video():
     videos = cur.fetchall()
     cur.close()
 
-    print(url_for('static', filename='video/aaa.mp4'))
-
     return [{k:v for k, v in record.items()} for record in videos], 200
 
 
@@ -56,8 +52,6 @@ def get_intrusion_video():
     cur.execute('SELECT * FROM video WHERE intrusion IS True ORDER BY timestamp DESC')
     videos = cur.fetchall()
     cur.close()
-
-    print(url_for('static', filename='video/aaa.mp4'))
 
     return [{k:v for k, v in record.items()} for record in videos], 200
 
@@ -73,8 +67,6 @@ def set_intrusion_video():
 
     cur.execute('SELECT * FROM video WHERE id = %s', (video_id, ))
     video = cur.fetchone()
-
-    print(video['intrusion'])
 
     if video is None:
         return "Video not found", 404

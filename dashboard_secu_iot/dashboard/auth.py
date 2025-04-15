@@ -1,7 +1,7 @@
 import functools
 
 from flask import (
-    Blueprint, g, redirect, request, session, url_for, jsonify, make_response
+    Blueprint, g, redirect, request, session, url_for, jsonify, make_response, current_app
 )
 import os
 import bcrypt
@@ -29,6 +29,11 @@ def login():
         session.clear()
 
         session["jwt_token"] = jwt.encode({"email": user[0]}, os.getenv("SECRET_KEY"), algorithm="HS256")
+
+        current_app.logger.info(f"User {email} logged in successfully.")
+
+        with open("dashboard/static/logs/info.log", "a") as log_file:
+            log_file.write(f"User {email} logged in successfully.\n")
 
         return jsonify({"redirect": url_for('dashboard.dashboard')}), 200
     
@@ -130,4 +135,3 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
-
