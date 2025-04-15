@@ -83,14 +83,6 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
                 video_path = os.path.join(SAVE_DIR, video_filename)
                 video_writer = cv2.VideoWriter(video_path, fourcc, max_fps, (frame.shape[1], frame.shape[0]))
 
-                # envoyer le lien à l'api #TODO mettre après l'enregistrement complet
-                send_detection_to_api(
-                    video_filename,
-                    ts.strftime('%Y-%m-%d %H:%M:%S'),
-                    detection_dict,
-                    API_URL
-                )
-
             if detection_frame_count == 2:  # si on arrive a la 3e frame de detection consecutive envoyer notif discord (pour avoir un screen correct et pas juste qqn sur le bord)
                 # capture image + envoi API + Discord
                 image_name = f"detection_{timestamp}.jpg"
@@ -109,7 +101,7 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
         if alert_active:
             video_writer.write(frame)
 
-            # si plus aucune détection depuis x secondes
+            # si plus aucune détection depuis x secondes on termine l'enregistrement
             if last_detection_time and (now - last_detection_time) > no_detection_timeout:
                 print("Fin d'enregistrement.")
                 alert_active = False
@@ -128,6 +120,14 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
                         print(f"Vidéo chiffrée et sauvegardée : {encrypted_video_path}")
                     else:
                         print("Echec du chiffrement de la vidéo.")
+
+                # envoyer le lien à l'api #TODO mettre après l'enregistrement complet
+                send_detection_to_api(
+                    video_filename,
+                    ts.strftime('%Y-%m-%d %H:%M:%S'),
+                    detection_dict,
+                    API_URL
+                )
 
                 video_filename = None
                 video_path = None
