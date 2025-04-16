@@ -12,6 +12,6 @@ CREATE TABLE video (
     file_path VARCHAR(255) NOT NULL,
     timestamp TIMESTAMP NOT NULL,
     duration INTEGER NOT NULL,
-    description TEXT,
+    description TEXT NOT NULL,
     intrusion BOOLEAN DEFAULT NULL
 );
