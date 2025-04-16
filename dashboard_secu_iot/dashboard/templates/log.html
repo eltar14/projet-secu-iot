@@ -97,19 +97,19 @@
                             >
                                 <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                                 <a
-                                    href="#"
-                                    class="px-1 flex items-center text-sm font-medium text-gray-900 border-b-2 border-indigo-500"
-                                    aria-current="page"
+                                    href="{{ url_for('dashboard.dashboard') }}"
+                                    class="px-1 flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300"
                                     >Dashboard</a
                                 >
                                 <a
                                     href="{{ url_for('intrusion.dashboard') }}"
                                     class="px-1 flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300"
+                                    aria-current="page"
                                     >Intrusion</a
                                 >
                                 <a
-                                    href="{{ url_for('log.dashboard') }}"
-                                    class="px-1 flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300"
+                                    href="#"
+                                    class="px-1 flex items-center text-sm font-medium text-gray-900 border-b-2 border-indigo-500"
                                     aria-current="page"
                                     >Server Log</a
                                 >
@@ -141,8 +141,8 @@
                 <div class="space-y-1 pt-2 pb-3">
                     <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                     <a
-                        href="#"
-                        class="block px-3 py-2 text-base font-medium text-indigo-700 bg-indigo-100 border-l-4 border-indigo-500"
+                        href="{{ url_for('dashboard.dashboard') }}"
+                        class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-700 bg-white hover:bg-gray-50 border-l-4 border-transparent hover:border-gray-400"
                         aria-current="page"
                         >Dashboard</a
                     >
@@ -152,25 +152,39 @@
                         >Intrusion</a
                     >
                     <a
-                        href="{{ url_for('log.dashboard') }}"
-                        class="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-700 bg-white hover:bg-gray-50 border-l-4 border-transparent hover:border-gray-400"
+                        href="#"
+                        class="block px-3 py-2 text-base font-medium text-indigo-700 bg-indigo-100 border-l-4 border-indigo-500"
                         >Server Log</a
                     >
                 </div>
             </div>
         </nav>
 
-        <section class="flex flex-col items-center justify-center">
-            <div class="w-7/10 mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
-                <h1 class="text-2xl font-bold mb-4">Vidéo</h1>
+        <div class="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
+            <h1 class="text-2xl font-bold mb-4">System Logs</h1>
+            <div class="space-y-2 max-h-[600px] overflow-y-auto">
+                {% for log in logs %} {% if 'Video ID' in log %} {% set video_id
+                = log.split('Video ID ')[1].split(' ')[0] %}
                 <div
-                    id="video-container"
-                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-5xl"
-                ></div>
+                    class="flex justify-between items-center bg-gray-50 p-3 rounded-md border border-gray-200 text-sm font-mono text-gray-700"
+                >
+                    <span>{{ log.strip() }}</span>
+                    <button
+                        data-video-id="{{ video_id }}"
+                        class="cancel-video px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                    >
+                        Cancel
+                    </button>
+                </div>
+                {% else %}
+                <div
+                    class="bg-gray-50 p-3 rounded-md border border-gray-200 text-sm font-mono text-gray-700"
+                >
+                    {{ log.strip() }}
+                </div>
+                {% endif %} {% endfor %}
             </div>
-        </section>
-
-        <footer></footer>
+        </div>
 
         <script
             type="module"
@@ -178,11 +192,7 @@
         ></script>
         <script
             type="module"
-            src="{{ url_for('static', filename='scripts/auth.js') }}"
-        ></script>
-        <script
-            type="module"
-            src="{{ url_for('static', filename='scripts/dashboard.js') }}"
+            src="{{ url_for('static', filename='scripts/log.js') }}"
         ></script>
     </body>
 </html>

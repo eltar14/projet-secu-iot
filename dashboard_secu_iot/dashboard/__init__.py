@@ -32,6 +32,9 @@ def create_app(test_config=None):
     from . import intrusion
     app.register_blueprint(intrusion.bp)
 
+    from . import log
+    app.register_blueprint(log.bp)
+
     from . import dashboard
     app.register_blueprint(dashboard.bp)
     app.add_url_rule('/', endpoint='index')

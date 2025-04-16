@@ -1,11 +1,12 @@
 import functools
 
 from flask import (
-    Blueprint, g, redirect, request, session, url_for, jsonify, make_response
+    Blueprint, g, redirect, request, session, url_for, jsonify, make_response, current_app
 )
 import os
 import bcrypt
 import jwt
+from datetime import datetime
 
 from dashboard.db import get_db
 
@@ -29,6 +30,11 @@ def login():
         session.clear()
 
         session["jwt_token"] = jwt.encode({"email": user[0]}, os.getenv("SECRET_KEY"), algorithm="HS256")
+
+        current_app.logger.info(f"User {email} logged in successfully.")
+
+        with open("dashboard/logs/info.log", "a") as log_file:
+            log_file.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]} - INFO - LOGIN\n")
 
         return jsonify({"redirect": url_for('dashboard.dashboard')}), 200
     
@@ -91,6 +97,9 @@ def register():
 @bp.route('/logout', methods=('POST', ))
 def logout():
     session.clear()
+    with open("dashboard/logs/info.log", "a") as log_file:
+        log_file.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]} - INFO - LOGOUT\n")
+
     return jsonify({"redirect": url_for("index")}), 200
 
 
@@ -130,4 +139,3 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
-
