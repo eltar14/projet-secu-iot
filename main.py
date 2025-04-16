@@ -73,7 +73,8 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
             last_detection_time = now
 
             if not alert_active:  # si nouvelle détection
-                alert_active = True  # bool d'etat True
+                saved_detection_dict = make_detection_dict(results[0].boxes, results[0].names) # sauvegarde du dictionnaire de detection a inclure dans l'envoi de la video a l'api
+                alert_active = True  # bool d'etat True : on est dans une detection
                 detection_frame_count = 0
                 ts = datetime.now()
                 timestamp = ts.strftime('%Y-%m-%d_%H-%M-%S')
@@ -125,7 +126,7 @@ def main(model_path, max_fps=4, no_detection_timeout=2):
                 send_detection_to_api(
                     video_filename,
                     ts.strftime('%Y-%m-%d %H:%M:%S'),
-                    detection_dict,
+                    saved_detection_dict,
                     API_URL
                 )
 
