@@ -23,11 +23,11 @@ To run : `python main.py`
 ### 2. Initialization of the server part 
 
 Requirement : UV
--  Windows
+-  Windows install
     ```powershell
     powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
     ```
-- MacOS and Linux
+- MacOS and Linux install
     ```bash
     curl -LsSf https://astral.sh/uv/install.sh | sh
     ```
@@ -35,9 +35,19 @@ Requirement : UV
 In the dashboard_secu_iot directory
 
 - Create a `.env` file containing the following environnement variables :
-  - Database variable : DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT
-  - Frenet encryption key : ENCRYPTION_KEY
-  - Flask encryption key : SECRET_KEY
+    - Database variable : DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT
+    - Frenet encryption key : ENCRYPTION_KEY
+    - Flask encryption key : SECRET_KEY
+
+- Initialize the database
+    ```bash
+    flask --app dashboard init-db
+    ```
+
+- Run the server
+    ```bash
+    flask --app dashboard run --port=4000
+    ```
 
 <hr>  
 
