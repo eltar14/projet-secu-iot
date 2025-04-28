@@ -23,6 +23,8 @@ To run : `python main.py`
 ### 2. Initialization of the server part 
 ELOUAAN jte laisse compléter ici 
 
+<hr>  
+
 ## Project Overview
 
 
