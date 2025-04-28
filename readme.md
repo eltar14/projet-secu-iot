@@ -1,6 +1,40 @@
 # README - Projet de fin de session - Sécurité informatique pour l'internet des objets
+## Project Overview
 
-## 1. Initialisation of the detection part
+
+This project implements a secure IoT surveilance system using a webcam and a RaspBerry Pi 4.   
+All detection and video processing are performed locally to minimize exposure to external attacks and ensure data confidentiality.
+Main characteristics : 
+
+### Detection   
+- YOLOv11n object detection model runs locally (on the RP4), runs on an optimized NCNN format made for devices with limited computing power and no graphical acceleration. Ideal for lightweight real time detection.
+
+When a detection occurs : 
+- An alert is sent to a Discord channel using a webhook
+- A video recording starts and stays active while there is a detection.
+
+When a detection stops :
+- The video is encrypted and saved. 
+- A POST request is sent to the server, with the address of the recorded video and some data about the detection (timestamp, number of people detected, ..) in JSON format.
+
+All image processing remains fully local, reducing the risk of sensitive data interception.
+
+### Server side
+elouan jte laisse compléter
+
+
+### Overall Security considerations :
+- All detection are made locally on the RaspberryPi, minimizing attack surface.
+- **Authentication and session security**
+  - Strong password policies are enforced when creating user accounts.
+  - JWTs are used for user authentication and are stored in Http Only cookies.
+- **Acess controls** : Access to videos and detection logs is restricted to authenticated users only.
+- **Secure communication** : Access to the app is secured with TLS (HTTPS) using Nginx reverse proxy and a self signed certificate (+ .cert file on the user device).
+- **Secure storage** : All videos are encrypted and signed.
+- **Logging** : All connections to the app are logged to ensure traceability.
+
+
+### 1. Initialisation of the detection part
 ```bash
 python -m venv venv
 source venv/bin/activate
@@ -19,5 +53,5 @@ pip install -r requirements.txt
 To run : `python main.py`
 
 
-## 2. Initialization of the server part  
-Refer to `dashboard_secu_iot/readme.md`.
+### 2. Initialization of the server part 
+ELOUAAN jte laisse compléter ici 
