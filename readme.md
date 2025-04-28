@@ -90,8 +90,9 @@ When a detection stops :
 All image processing remains fully local, reducing the risk of sensitive data interception.
 
 ### Server side
-elouan jte laisse compléter
+The dashboard is here to visualize the video captured by the camera. You can then decide whether or not it's an intrusion. Logs are also available to see if unwanted modifications have been made by an intruder, or to undo actions taken on a video.
 
+For reasons of user-friendliness and rights management, only one admin account can be created, and it cannot change its password, as no double-checking is implemented.
 
 ### Overall Security considerations :
 - All detection are made locally on the RaspberryPi, minimizing attack surface.
