@@ -34,6 +34,24 @@ Requirement : UV
 
 In the dashboard_secu_iot directory
 
+- Create the python virtual environement with UV (need python 3.13)
+    ```bash
+    uv venv
+    ```
+- Install dependencies
+    ```bash
+    uv sync
+    ```
+- Activate the python virtual environement
+    - Windows
+        ```powershell
+        .venv\Scripts\activate
+        ```
+    - MacOS and Linux
+        ```bash
+        source .venv/bin/activate
+        ```
+
 - Create a `.env` file containing the following environnement variables :
     - Database variable : DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT
     - Frenet encryption key : ENCRYPTION_KEY
